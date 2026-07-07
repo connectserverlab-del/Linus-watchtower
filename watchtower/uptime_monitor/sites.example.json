@@ -1,0 +1,13 @@
+{
+  "check_interval_seconds": 60,
+  "timeout_seconds": 10,
+  "failures_before_down": 2,
+  "successes_before_up": 1,
+  "state_file": "uptime_state.json",
+  "webhook_url": "",
+  "sites": [
+    { "name": "Example Site", "url": "https://example.com", "expected_status": 200 },
+    { "name": "Keyword Guard", "url": "https://example.com", "keyword": "Example Domain" },
+    { "name": "API Health", "url": "https://httpbin.org/status/200", "expected_status": 200 }
+  ]
+}

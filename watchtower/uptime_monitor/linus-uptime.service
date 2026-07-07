@@ -1,0 +1,22 @@
+# systemd unit for the Linus uptime monitor.
+# Install:  sudo cp linus-uptime.service /etc/systemd/system/
+#           sudo systemctl daemon-reload && sudo systemctl enable --now linus-uptime
+# Logs:     journalctl -u linus-uptime -f
+[Unit]
+Description=Linus uptime monitor (Standard Sites watchdog)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+# Adjust User and paths to your deployment.
+User=linus
+WorkingDirectory=/opt/linus-watchtower/watchtower/uptime_monitor
+ExecStart=/usr/bin/python3 monitor.py
+Restart=always
+RestartSec=5
+# Optional: deliver alerts to a webhook without editing the config file.
+# Environment=LINUS_WEBHOOK_URL=https://hooks.example.com/uptime
+
+[Install]
+WantedBy=multi-user.target
