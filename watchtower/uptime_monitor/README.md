@@ -5,8 +5,8 @@ detects up↔down transitions (with flap protection), and emits a JSON event on
 every change. Part of **Linus** — the watchdog that currently monitors
 performance across Standard Sites and is intended to grow into its own product.
 
-**Zero dependencies** — pure Python standard library (Python 3.10+). Drop it on
-any server and run it.
+**Zero dependencies** — pure Python standard library (Python 3.8+). Drop it on
+any server and run it, as a long-running daemon or a cron one-shot.
 
 ## Quick start
 
@@ -73,6 +73,31 @@ journalctl -u linus-uptime -f          # follow the logs
 Edit `User`, `WorkingDirectory`, and (optionally) `LINUS_WEBHOOK_URL` in the unit
 file to match your deployment. `Restart=always` keeps it running across crashes
 and reboots.
+
+## Running on shared hosting (Bluehost / cPanel) — use cron
+
+Shared hosts typically don't allow a persistent background process (no systemd,
+long-running scripts get killed). Run a **one-shot check on a schedule** instead:
+
+```bash
+python3 monitor.py --once
+```
+
+`--once` runs a single cycle and exits, updating the same `uptime_state.json`,
+so transition detection (down/recovered) still works across runs. Add a cron job
+(cPanel → *Cron Jobs*), e.g. every 5 minutes:
+
+```cron
+*/5 * * * * cd /home/USER/linus/uptime_monitor && /usr/bin/python3 monitor.py --once >> uptime.log 2>&1
+```
+
+Notes for Bluehost:
+- Use the Python path from cPanel's *Setup Python App* if the system `python3`
+  is too old (this monitor needs 3.8+).
+- Set the check interval in `sites.json` to match (or exceed) your cron cadence —
+  with `--once`, cron *is* the interval, so `check_interval_seconds` is ignored.
+- Configure `webhook_url` (or `LINUS_WEBHOOK_URL`) so you're alerted even though
+  stdout goes to `uptime.log`.
 
 ## How "down" is decided
 
