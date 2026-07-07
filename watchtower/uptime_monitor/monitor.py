@@ -84,6 +84,11 @@ def check_all(settings: Settings, state: StateStore) -> None:
 
 
 def main() -> int:
+    # --once: run a single check cycle and exit. Use this on hosts where a
+    # persistent process isn't allowed (e.g. Bluehost / shared cPanel hosting)
+    # by driving it from cron. Without it, the monitor runs forever as a daemon.
+    run_once = "--once" in sys.argv[1:]
+
     try:
         settings = load_settings()
     except ConfigError as exc:
@@ -99,6 +104,15 @@ def main() -> int:
         successes_before_up=settings.successes_before_up,
     )
     state.load()
+
+    if run_once:
+        LOGGER.info("Running a single check cycle (--once): %d site(s).", len(settings.sites))
+        try:
+            check_all(settings, state)
+        except Exception:
+            LOGGER.exception("Unexpected error during check cycle.")
+            return 1
+        return 0
 
     LOGGER.info(
         "Starting Linus uptime monitor: %d site(s), every %ds, %ds timeout.",
