@@ -1,0 +1,7 @@
+[Unit]
+Description=Schedule the Lumina backlog burn-down agent
+[Timer]
+OnCalendar=Mon..Fri 02,06,10:00
+Persistent=true
+[Install]
+WantedBy=timers.target

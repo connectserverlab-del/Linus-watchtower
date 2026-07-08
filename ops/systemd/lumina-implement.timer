@@ -1,0 +1,7 @@
+[Unit]
+Description=Schedule the Lumina research-implementation agent (last 2h)
+[Timer]
+OnCalendar=Mon..Fri 09:00
+Persistent=true
+[Install]
+WantedBy=timers.target
