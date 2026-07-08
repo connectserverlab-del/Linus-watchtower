@@ -1,0 +1,10 @@
+[Unit]
+Description=Lumina research-implementation agent (last 2h)
+After=network-online.target
+Wants=network-online.target
+[Service]
+Type=oneshot
+User=ops
+WorkingDirectory=/opt/linus-watchtower/ops
+ExecStart=/opt/linus-watchtower/ops/run-agent.sh implement
+TimeoutStartSec=3600

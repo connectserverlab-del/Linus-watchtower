@@ -1,0 +1,10 @@
+[Unit]
+Description=Lumina backlog burn-down agent
+After=network-online.target
+Wants=network-online.target
+[Service]
+Type=oneshot
+User=ops
+WorkingDirectory=/opt/linus-watchtower/ops
+ExecStart=/opt/linus-watchtower/ops/run-agent.sh burndown
+TimeoutStartSec=3600

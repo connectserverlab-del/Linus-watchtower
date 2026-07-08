@@ -1,0 +1,10 @@
+[Unit]
+Description=Lumina morning briefing agent (texts the daily summary)
+After=network-online.target
+Wants=network-online.target
+[Service]
+Type=oneshot
+User=ops
+WorkingDirectory=/opt/linus-watchtower/ops
+ExecStart=/opt/linus-watchtower/ops/run-agent.sh briefing
+TimeoutStartSec=1800
