@@ -1,0 +1,8 @@
+[Unit]
+Description=Lumina ops/monitor agent (health of figaro + linus-uptime)
+After=network-online.target
+[Service]
+Type=oneshot
+User=ops
+WorkingDirectory=/opt/linus-watchtower/ops
+ExecStart=/opt/linus-watchtower/ops/run-agent.sh ops-monitor
